@@ -1,25 +1,22 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Box, Flex } from '@chakra-ui/react';
+import PersonCard from './Components/PersonCard';
+import SearchForm from './Components/SearchForm';
+import PersonDisplay from './Components/PersonDisplay';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box height='100vh' bg='gray.800' color='shared.textColour'>
+      <Flex flex='1'>
+        <PersonDisplay />
+        <PersonCard 
+          avatarUrl='https://bit.ly/dan-abramov'
+          username='azerbijon123'
+        />
+      </Flex>
+    </Box>
   );
 }
 

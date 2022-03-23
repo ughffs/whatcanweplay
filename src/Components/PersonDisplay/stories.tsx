@@ -1,24 +1,22 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '../../theme';
-import ItemIcon from './index';
-import TestImage from '../../Assets/Images/Uncommon/bandolier.png';
+import PersonDisplay from './index';
 
 export default {
-    title: 'Custom/ItemIcon',
-    component: ItemIcon,
+    title: 'Custom/PersonDisplay',
+    component: PersonDisplay,
     argTypes: {}
-} as ComponentMeta<typeof ItemIcon>;
+} as ComponentMeta<typeof PersonDisplay>;
 
-const Template: ComponentStory<typeof ItemIcon> = (args) => {
+const Template: ComponentStory<typeof PersonDisplay> = (args) => {
     return(
         <ChakraProvider theme={theme}>
-            <ItemIcon { ...args } />
+            <PersonDisplay />
         </ChakraProvider>
     )
 };
 
 export const Main = Template.bind({});
 Main.args = {
-    image: TestImage
 };

@@ -1,24 +1,23 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from '../../theme';
-import ItemBoxHeader from './index';
+import PersonAvatar from './index';
 
 export default {
-    title: 'Custom/ItemBoxHeader',
-    component: ItemBoxHeader,
+    title: 'Custom/PersonAvatar',
+    component: PersonAvatar,
     argTypes: {}
-} as ComponentMeta<typeof ItemBoxHeader>;
+} as ComponentMeta<typeof PersonAvatar>;
 
-const Template: ComponentStory<typeof ItemBoxHeader> = (args) => {
+const Template: ComponentStory<typeof PersonAvatar> = (args) => {
     return(
         <ChakraProvider theme={theme}>
-            <ItemBoxHeader { ...args } />
+            <PersonAvatar { ...args } />
         </ChakraProvider>
     )
 };
 
-
 export const Main = Template.bind({});
 Main.args = {
-    itemType: 'common'
+    source: 'https://bit.ly/dan-abramov'
 };
