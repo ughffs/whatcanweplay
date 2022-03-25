@@ -9,12 +9,8 @@ import PersonDisplay from './Components/PersonDisplay';
 function App() {
   return (
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
-      <Flex flex='1'>
+      <Flex flex='1' justifyContent='center'>
         <PersonDisplay />
-        <PersonCard 
-          avatarUrl='https://bit.ly/dan-abramov'
-          username='azerbijon123'
-        />
       </Flex>
     </Box>
   );

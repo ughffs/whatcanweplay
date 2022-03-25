@@ -9,9 +9,8 @@ const PersonAvatar = (props: PersonAvatarProps) => {
         <Flex
             width='64px' 
             height='64px' 
-            bg='orange'
         >
-            <Image src={ props.source } borderRadius='lg' />
+            <Image src={ props.source } borderRadius='md' />
         </Flex>
     );
 };
