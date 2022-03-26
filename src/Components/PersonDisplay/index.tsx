@@ -3,7 +3,7 @@ import { useState } from "react";
 import PersonList from "../PersonList";
 import SearchForm from "../SearchForm";
 import { Person, SteamPerson } from "../../Types/app.type";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, CloseButton, Flex } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, CloseButton, Flex, Heading } from "@chakra-ui/react";
 
 const PersonDisplay = () => {
     const [people, setPeople] = useState<Person[]>([]);
@@ -45,12 +45,25 @@ const PersonDisplay = () => {
         setIsLoading(false);
     };
 
+    const removePersonFromList = (steamId: string) => {
+        let index = people.findIndex(p => 
+            p.steamid === steamId);
+
+        if(index != -1)
+        {
+            let tmpArray = [...people];
+            tmpArray.splice(index, 1);
+            setPeople(tmpArray);
+        }
+    };
+
     return (
         <Flex 
             gap='20px'
             flexDirection='column'
             padding='10px'
         >
+            <Heading as='h2' size='md'>Players</Heading>
             <SearchForm 
                 onSubmit={ searchForPeople } 
                 isLoading={ isLoading } />
@@ -65,6 +78,7 @@ const PersonDisplay = () => {
 
             <PersonList 
                 people={ people }
+                onPersonClick={ removePersonFromList }
             />
         </Flex>  
     );

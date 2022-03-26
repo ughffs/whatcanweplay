@@ -5,6 +5,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import PersonCard from './Components/PersonCard';
 import SearchForm from './Components/SearchForm';
 import PersonDisplay from './Components/PersonDisplay';
+import { GetSharedGamesRequest } from './Types/app.type';
 
 function App() {
   return (

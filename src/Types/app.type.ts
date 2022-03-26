@@ -5,6 +5,20 @@ export interface Person {
     avatar: string;
 };
 
+export interface GetSharedGamesRequest {
+    steamIds: string[];
+};
+
+export interface GetSharedGamesResponse {
+    sharedGames: Game[];
+};
+
+export interface Game {
+    appid: number;
+    name: string;
+    icon: string;
+}
+
 export interface SteamPerson {
     "response": {
         "players":
