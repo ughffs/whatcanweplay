@@ -1,27 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { Box, Flex, Spinner } from '@chakra-ui/react';
-import PersonCard from './Components/PersonCard';
-import SearchForm from './Components/SearchForm';
 import PersonDisplay from './Components/PersonDisplay';
 import { Game, GetSharedGamesRequest, GetSharedGamesResponse, Person, SteamPerson } from './Types/app.type';
 import axios from 'axios';
 import GameList from './Components/GameList';
+import GamesDisplay from './Components/GamesDisplay';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
-  const [sharedGames,setSharedGames] = useState<Game[]>([]);
+  const [sharedGames, setSharedGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    updateSharedGames();
+    if (people.length == 1)
+    {
+      setSharedGames([]);
+    }
+    else
+    {
+      updateSharedGames();
+    }
   }, [people]);
 
   const searchForPerson = async (steamId: string) => {
-
 
     if (steamId === '')
     {
@@ -124,10 +128,11 @@ function App() {
             people={ people }
           />
         </Flex>
-        <Flex>
-          {
-            games 
-          }
+        <Flex flex='1'>
+          <GamesDisplay 
+            games={ sharedGames } 
+            isLoading={ isFindingGames }
+          />
         </Flex>
       </Flex>
     </Box>

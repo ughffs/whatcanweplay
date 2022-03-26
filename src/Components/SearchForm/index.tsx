@@ -11,6 +11,7 @@ const SearchForm = (props: SearchFormProps) => {
 
     const handleSubmit = () => {
         props.onSubmit(inputValue);
+        setInputValue('');
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
