@@ -17,6 +17,7 @@ const GameCard = (props: GameCardProps) => {
             color='shared.textColour'
             alignItems='center'
             gap='10px'
+            flex='1'
         >
             <GameIcon source={ props.game.icon } />
 
