@@ -55,7 +55,7 @@ function App() {
         }
     });
 
-    const player = resp.data.response.players[0];
+    const player = resp.data;
     const tmpPerson: Person = {
         avatar: player.avatarmedium,
         personaname: player.personaname,
