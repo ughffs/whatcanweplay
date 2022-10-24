@@ -118,8 +118,8 @@ function App() {
   return (
 
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
-      <Flex flex='1' flexDirection='row'>
-        <Flex flex='1' justifyContent='center'>
+      <Flex flex='1' flexDirection='row' gap='100px'>
+        <Flex flex='1' justifyContent='right'>
           <PersonDisplay
             searchForPerson={ searchForPerson }
             removePerson={ removePerson }
@@ -128,7 +128,7 @@ function App() {
             people={ people }
           />
         </Flex>
-        <Flex flex='1'>
+        <Flex flex='1' justifyContent='left'>
           <GamesDisplay 
             games={ sharedGames } 
             isLoading={ isFindingGames }

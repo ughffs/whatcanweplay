@@ -12,7 +12,8 @@ const GameList = (props: GameListProps) => {
         <Flex 
             flex='1'
             flexDirection='column'
-            gap='5px'>
+            gap='5px'
+            marginRight='5px'>
             {
                 props.games.map(g =>
                     <GameCard 
