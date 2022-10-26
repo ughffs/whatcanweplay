@@ -6,6 +6,7 @@ import { Game, GetSharedGamesRequest, GetSharedGamesResponse, Person, SteamPerso
 import axios from 'axios';
 import GameList from './Components/GameList';
 import GamesDisplay from './Components/GamesDisplay';
+import FriendsDisplay from './Components/FriendsDisplay';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -112,14 +113,13 @@ function App() {
   else 
   {
     games = <GameList games={ sharedGames } />
-
   }
 
   return (
 
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
-      <Flex flex='1' flexDirection='row' gap='100px'>
-        <Flex flex='1' justifyContent='right'>
+      <Flex flex='1' flexDirection='row' gap='100px' justifyContent='center'>
+        <Flex justifyContent='right' flexDirection='column'gap='100px'>
           <PersonDisplay
             searchForPerson={ searchForPerson }
             removePerson={ removePerson }
@@ -127,8 +127,13 @@ function App() {
             isSearching={ isSearching }
             people={ people }
           />
+          <FriendsDisplay 
+            error={ searchError }
+            isSearching={ isSearching }
+            people={ people }
+          />
         </Flex>
-        <Flex flex='1' justifyContent='left'>
+        <Flex justifyContent='left'>
           <GamesDisplay 
             games={ sharedGames } 
             isLoading={ isFindingGames }
