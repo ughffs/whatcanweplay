@@ -83,22 +83,18 @@ function App() {
   const updateSharedGames = async () => {
     if (people?.length > 1)
     {
-      console.log('people array is > 0');
       setIsFindingGames(true);
 
-      console.log(people);
       let something = people.map(p => p.steamid);
       let payload: GetSharedGamesRequest = {
         steamIds: people.map(p => p.steamid)
       };
 
-      console.log(something);
-
       const resp = await axios.post<GetSharedGamesResponse>(
         'http://localhost:1234/steam/games',
         payload
       );
-      console.log(resp.data);
+
       setSharedGames(resp.data.sharedGames);
       setIsFindingGames(false);
     }

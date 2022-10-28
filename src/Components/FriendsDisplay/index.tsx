@@ -22,7 +22,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
         <Accordion allowToggle padding='10px'>
             <AccordionItem border='none'>
                 <h3>
-                    <AccordionButton paddingLeft='0'>
+                    <AccordionButton paddingLeft='0' _focus={{ boxShadow: 'unset' }}>
                         <Box flex='1' textAlign='left'>
                             <Heading as='h2' size='md'>Add from friends</Heading>
                         </Box>
