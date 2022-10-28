@@ -26,6 +26,17 @@ function App() {
     }
   }, [people]);
 
+  // Potentially pull some of these out into hooks
+  const playerAlreadyExistsInCollection = (steamId: string) : boolean => {
+    let alreadyExists: boolean = false;
+    people.forEach(p => {
+        if(p.steamid === steamId)
+            alreadyExists = true;
+    });
+
+    return alreadyExists;
+  };
+
   const searchForPerson = async (steamId: string) => {
 
     if (steamId === '')
@@ -37,11 +48,7 @@ function App() {
     setIsSearching(true);
     setSearchError('');
 
-    let alreadyExists: boolean = false;
-    people.forEach(p => {
-        if(p.steamid === steamId)
-            alreadyExists = true;
-    });
+    let alreadyExists = playerAlreadyExistsInCollection(steamId);
 
     if(alreadyExists)
     {
@@ -50,6 +57,7 @@ function App() {
         return;
     }
 
+    // Pull this out into service method
     const resp = await axios.get<SteamPerson>('http://localhost:1234/steam/user/', {
         params: {
             steamid: steamId
@@ -99,17 +107,6 @@ function App() {
       setIsFindingGames(false);
     }
   };
-
-  let games;
-
-  if (isFindingGames)
-  {
-    games = <Spinner />
-  }
-  else 
-  {
-    games = <GameList games={ sharedGames } />
-  }
 
   return (
 
