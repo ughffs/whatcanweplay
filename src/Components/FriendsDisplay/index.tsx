@@ -5,17 +5,35 @@ import SearchForm from "../SearchForm";
 import { Person, SteamPerson } from "../../Types/app.type";
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Select, Text } from "@chakra-ui/react";
 import PersonSelect from "../PersonSelect";
+import steamService from '../../services/steamService';
 
 export interface FriendsDisplayProps { 
     people: Person[];
+    onSelectFriend: (steamId: string) => void;
     isSearching: boolean;
     error: string;
 };
 
 const FriendsDisplay = (props: FriendsDisplayProps) => {
 
-    const handlePersonSelect = (steamId: string) => {
-        console.log('person selected: ' + steamId)
+    const [friends, setFriends] = useState<Person[]>([]);
+
+    const handlePersonSelect = async (steamId: string) => {
+        let result = await steamService.getFriendsOfPersonBySteamId(steamId);
+        
+        if (result != null && result.length > 0) {
+            let mappedPeople: Person[] = result.map(person => {
+                return {
+                    avatar: person.avatarmedium,
+                    personaname: person.personaname,
+                    profileurl: person.profileurl,
+                    steamid: person.steamid
+                };
+            })
+            setFriends(mappedPeople);
+        }
+
+        console.log(friends);
     };
 
     return (
@@ -51,6 +69,10 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                             </Alert>
                         }
 
+                        <PersonList 
+                            people={ friends }
+                            onPersonClick={ handlePersonSelect }
+                        />
                     </Flex>  
                 </AccordionPanel>
             </AccordionItem>

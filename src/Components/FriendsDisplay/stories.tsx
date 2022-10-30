@@ -53,6 +53,8 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
         setIsSearching(false);
     };
 
+
+
     const removePerson = (steamId: string) => {
         let index = people.findIndex(p => 
             p.steamid === steamId);
@@ -67,6 +69,7 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
     return(
         <ChakraProvider theme={theme}>
             <FriendsDisplay 
+                onSelectFriend={ searchForPerson }
                 error={ searchError }
                 isSearching={ isSearching }
                 people={ people }

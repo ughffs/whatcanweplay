@@ -7,6 +7,7 @@ import axios from 'axios';
 import GameList from './Components/GameList';
 import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
+import steamService from './services/steamService';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -27,7 +28,7 @@ function App() {
   }, [people]);
 
   // Potentially pull some of these out into hooks
-  const playerAlreadyExistsInCollection = (steamId: string) : boolean => {
+  const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
     let alreadyExists: boolean = false;
     people.forEach(p => {
         if(p.steamid === steamId)
@@ -37,6 +38,7 @@ function App() {
     return alreadyExists;
   };
 
+  // This needs to be split out, searching and adding should be separate functions
   const searchForPerson = async (steamId: string) => {
 
     if (steamId === '')
@@ -48,7 +50,7 @@ function App() {
     setIsSearching(true);
     setSearchError('');
 
-    let alreadyExists = playerAlreadyExistsInCollection(steamId);
+    let alreadyExists = doesPlayerAlreadyExistsInCollection(steamId);
 
     if(alreadyExists)
     {
@@ -57,14 +59,8 @@ function App() {
         return;
     }
 
-    // Pull this out into service method
-    const resp = await axios.get<SteamPerson>('http://localhost:1234/steam/user/', {
-        params: {
-            steamid: steamId
-        }
-    });
+    const player = await steamService.getSteamPersonById(steamId);
 
-    const player = resp.data;
     const tmpPerson: Person = {
         avatar: player.avatarmedium,
         personaname: player.personaname,
@@ -74,6 +70,11 @@ function App() {
     
     setPeople([...people, tmpPerson]);
     setIsSearching(false);
+  };
+
+  const addFriendToPlayerList = async (steamId: string) => {
+    // TODO: This needs to be refactored too D: 
+    await searchForPerson(steamId);
   };
 
   const removePerson = (steamId: string) => {
@@ -121,6 +122,7 @@ function App() {
             people={ people }
           />
           <FriendsDisplay 
+            onSelectFriend={ addFriendToPlayerList }
             error={ searchError }
             isSearching={ isSearching }
             people={ people }
