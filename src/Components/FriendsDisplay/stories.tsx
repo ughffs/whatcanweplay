@@ -65,7 +65,6 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
         <ChakraProvider theme={theme}>
             <FriendsDisplay 
                 onSelectFriend={ searchForPerson }
-                error={ searchError }
                 people={ people }
             />
         </ChakraProvider>

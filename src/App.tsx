@@ -124,7 +124,6 @@ function App() {
             />
             <FriendsDisplay 
               onSelectFriend={ addFriendToPlayerList }
-              error={ searchError }
               people={ people }
             />
           </Flex>

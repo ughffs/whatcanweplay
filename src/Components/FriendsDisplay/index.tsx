@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 export interface FriendsDisplayProps { 
     people: Person[];
     onSelectFriend: (steamId: string) => void;
-    error: string;
 };
 
 const FriendsDisplay = (props: FriendsDisplayProps) => {
@@ -21,6 +20,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
     const [isSomeoneSelected, setIsSomeoneSelected] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorFetchingFriends, setErrorFetchingFriends] = useState<boolean>(false);
 
     useEffect(() => {
         setFilteredFriends(friends.filter(friend => friend.personaname.toLowerCase().includes(searchTerm)));
@@ -28,8 +28,17 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
 
     const handlePersonSelect = async (steamId: string) => {
         setIsLoading(true);
-        let result = await steamService.getFriendsOfPersonBySteamId(steamId);
-        
+        let result;
+
+        try {
+            result = await steamService.getFriendsOfPersonBySteamId(steamId);
+        }
+        catch(ex) {
+            setIsLoading(false);
+            setErrorFetchingFriends(true);
+            return;
+        }
+
         if (result != null && result.length > 0) {
             let mappedPeople: Person[] = result.map(person => {
                 return {
@@ -82,10 +91,10 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
             }
                 
             {
-                props.error !== '' && 
-                <Alert status='warning' color='gray.800' borderRadius='sm'>
+                errorFetchingFriends && 
+                <Alert status='warning' borderRadius='sm'>
                     <AlertIcon />
-                    { props.error }
+                    Unable to fetch friends for the selected person.
                 </Alert>
             }
 
