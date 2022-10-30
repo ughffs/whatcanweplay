@@ -32,7 +32,7 @@ const GamesDisplay = (props: GamesDisplayProps) => {
             <Heading as='h2' size='md'>Shared Games</Heading>
             { subHeading }
             <Flex 
-                overflowY='scroll'
+                overflowY='auto'
             >
                 { elementToRender }
             </Flex>

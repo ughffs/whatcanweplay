@@ -32,9 +32,11 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
             })
             setFriends(mappedPeople);
         }
-
-        console.log(friends);
     };
+
+    const handleOnFriendClick = (steamId: string) => {
+        props.onSelectFriend(steamId);
+    }
 
     return (
         <Accordion allowToggle padding='10px'>
@@ -71,7 +73,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
 
                         <PersonList 
                             people={ friends }
-                            onPersonClick={ handlePersonSelect }
+                            onPersonClick={ handleOnFriendClick }
                         />
                     </Flex>  
                 </AccordionPanel>
