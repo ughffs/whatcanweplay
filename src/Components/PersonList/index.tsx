@@ -23,6 +23,7 @@ const PersonList = (props: PersonListProps) => {
                         avatarUrl={ p.avatar }
                         username={ p.personaname }
                         onClick={ props.onPersonClick }
+                        privateProfile={ p.communityVisibilityState == 1 }
                     />
                 )
             }

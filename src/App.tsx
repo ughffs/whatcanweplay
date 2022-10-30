@@ -65,7 +65,8 @@ function App() {
         avatar: player.avatarmedium,
         personaname: player.personaname,
         profileurl: player.profileurl,
-        steamid: player.steamid
+        steamid: player.steamid,
+        communityVisibilityState: player.communityvisibilitystate
     };
     
     setPeople([...people, tmpPerson]);
@@ -132,6 +133,7 @@ function App() {
           <GamesDisplay 
             games={ sharedGames } 
             isLoading={ isFindingGames }
+            enoughPlayersToDisplayGames={ people.length >= 2}
           />
         </Flex>
       </Flex>

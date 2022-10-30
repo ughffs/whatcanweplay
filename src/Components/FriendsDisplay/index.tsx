@@ -45,7 +45,8 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                     avatar: person.avatarmedium,
                     personaname: person.personaname,
                     profileurl: person.profileurl,
-                    steamid: person.steamid
+                    steamid: person.steamid,
+                    communityVisibilityState: person.communityvisibilitystate
                 };
             })
             setFriends(mappedPeople);

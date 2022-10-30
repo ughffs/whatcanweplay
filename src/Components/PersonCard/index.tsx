@@ -1,14 +1,18 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { LockIcon } from "@chakra-ui/icons";
+import { Flex, Heading, IconButton, Popover, PopoverArrow, PopoverCloseButton, PopoverContent, PopoverTrigger, Tooltip, useDisclosure } from "@chakra-ui/react";
 import PersonAvatar from "../PersonAvatar";
 
 export interface PersonCardProps {
     steamId: string;
     username: string;
     avatarUrl: string;
+    privateProfile: boolean;
     onClick: (steamId: string) => void;
 }
 
 const PersonCard = (props: PersonCardProps) => {
+    const { onOpen, onClose, isOpen } = useDisclosure()
+
     const handleOnClick = () => {
         props.onClick(props.steamId);
     };
@@ -29,11 +33,20 @@ const PersonCard = (props: PersonCardProps) => {
             <Flex 
                 flex='1'
                 padding='10px'
-                alignItems='center'    
+                alignItems='center' 
+                justifyContent='space-between'   
+                gap='10px'
             >
                 <Heading as='h4' size='md'>
                     { props.username }
                 </Heading>
+
+                {
+                    props.privateProfile &&
+                    <Tooltip label='This account is private and might prevent games from being fetched.'>
+                        <LockIcon />
+                    </Tooltip>
+                }
             </Flex>
         </Flex>
     );

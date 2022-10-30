@@ -3,6 +3,7 @@ export interface Person {
     personaname: string;
     profileurl: string;
     avatar: string;
+    communityVisibilityState: number;
 };
 
 export interface GetSharedGamesRequest {

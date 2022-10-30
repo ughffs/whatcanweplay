@@ -5,6 +5,7 @@ import GameList from "../GameList";
 export interface GamesDisplayProps {
     games: Game[];
     isLoading: boolean;
+    enoughPlayersToDisplayGames: boolean;
 };
 
 const GamesDisplay = (props: GamesDisplayProps) => {
@@ -15,12 +16,15 @@ const GamesDisplay = (props: GamesDisplayProps) => {
 
     let subHeading;
 
-    if (props.games?.length == 0) {
-        subHeading = <Flex><Text fontSize='sm'>Please add at least 2 players to find games to play.</Text></Flex>
-    } 
-    else {
+    if (props.enoughPlayersToDisplayGames && props.games?.length > 0) {
         subHeading = <Flex><Text fontSize='sm'>{ props.games.length } games found.</Text></Flex>
     }
+    else if(!props.enoughPlayersToDisplayGames) {
+        subHeading = <Flex><Text fontSize='sm'>Please add at least 2 players to find games to play.</Text></Flex>
+    }
+    else if (props.games?.length == 0 && !props.isLoading) {
+        subHeading = <Flex><Text fontSize='sm'>There are no games found that you all own.</Text></Flex>
+    } 
 
     return (
         <Flex

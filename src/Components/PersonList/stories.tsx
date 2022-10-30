@@ -25,7 +25,8 @@ Main.args = {
             avatar: '',
             personaname: '',
             profileurl: '',
-            steamid: ''
+            steamid: '',
+            communityVisibilityState: 3
         }
     ]
 };

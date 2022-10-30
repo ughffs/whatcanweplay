@@ -46,7 +46,8 @@ const Template: ComponentStory<typeof PersonDisplay> = (args) => {
             avatar: player.avatarmedium,
             personaname: player.personaname,
             profileurl: player.profileurl,
-            steamid: player.steamid
+            steamid: player.steamid,
+            communityVisibilityState: player.communityvisibilitystate
         };
         
         setPeople([...people, tmpPerson]);
