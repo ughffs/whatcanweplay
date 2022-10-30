@@ -3,7 +3,7 @@ import { useState } from "react";
 import PersonList from "../PersonList";
 import SearchForm from "../SearchForm";
 import { Person, SteamPerson } from "../../Types/app.type";
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Select, Text } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Input, Select, Text } from "@chakra-ui/react";
 import PersonSelect from "../PersonSelect";
 import steamService from '../../services/steamService';
 
@@ -17,6 +17,7 @@ export interface FriendsDisplayProps {
 const FriendsDisplay = (props: FriendsDisplayProps) => {
 
     const [friends, setFriends] = useState<Person[]>([]);
+    const [isSomeoneSelected, setIsSomeoneSelected] = useState<boolean>(false);
 
     const handlePersonSelect = async (steamId: string) => {
         let result = await steamService.getFriendsOfPersonBySteamId(steamId);
@@ -31,6 +32,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                 };
             })
             setFriends(mappedPeople);
+            setIsSomeoneSelected(true);
         }
     };
 
@@ -55,6 +57,17 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                 people={ props.people }
                 onSelect={ handlePersonSelect }
             />
+            
+            {
+                isSomeoneSelected &&
+                <Flex>
+                    <Input 
+                        placeholder='Filter by display name'
+                        /*value={ inputValue }
+                        onChange={ handleInputChange }*/
+                    />
+                </Flex>
+            }
                 
             {
                 props.error !== '' && 
