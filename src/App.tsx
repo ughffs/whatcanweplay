@@ -115,7 +115,7 @@ function App() {
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
       <Flex flex='1' flexDirection='row' gap='100px' justifyContent='center'>
         <Flex justifyContent='right' flexDirection='column'gap='100px'>
-          <Flex flexDirection='column' height='100vh' minWidth='350px'>
+          <Flex flexDirection='column' height='100vh' minWidth='400px' maxWidth='400px'>
             <PersonDisplay
               searchForPerson={ searchForPerson }
               removePerson={ removePerson }

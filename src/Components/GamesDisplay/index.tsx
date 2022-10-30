@@ -16,10 +16,10 @@ const GamesDisplay = (props: GamesDisplayProps) => {
 
     let subHeading;
 
-    if (props.enoughPlayersToDisplayGames && props.games?.length > 0) {
+    if (props.enoughPlayersToDisplayGames && props.games?.length > 0 && !props.isLoading) {
         subHeading = <Flex><Text fontSize='sm'>{ props.games.length } games found.</Text></Flex>
     }
-    else if(!props.enoughPlayersToDisplayGames) {
+    else if(!props.enoughPlayersToDisplayGames && !props.isLoading) {
         subHeading = <Flex><Text fontSize='sm'>Please add at least 2 players to find games to play.</Text></Flex>
     }
     else if (props.games?.length == 0 && !props.isLoading) {
@@ -33,6 +33,7 @@ const GamesDisplay = (props: GamesDisplayProps) => {
             gap='20px'
             height='100vh'
             minWidth='400px'
+            maxWidth='400px'
         >
             <Heading as='h2' size='md'>Shared Games</Heading>
             { subHeading }

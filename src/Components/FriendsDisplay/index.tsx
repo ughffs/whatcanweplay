@@ -14,13 +14,13 @@ export interface FriendsDisplayProps {
 };
 
 const FriendsDisplay = (props: FriendsDisplayProps) => {
-
     const [friends, setFriends] = useState<Person[]>([]);
     const [filteredFriends, setFilteredFriends] = useState<Person[]>([]);
     const [isSomeoneSelected, setIsSomeoneSelected] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorFetchingFriends, setErrorFetchingFriends] = useState<boolean>(false);
+    const [selectedPerson, setSelectedPerson] = useState<Person | null | undefined>(null);
 
     useEffect(() => {
         setFilteredFriends(friends.filter(friend => friend.personaname.toLowerCase().includes(searchTerm)));
@@ -28,6 +28,9 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
 
     const handlePersonSelect = async (steamId: string) => {
         setIsLoading(true);
+        setErrorFetchingFriends(false);
+        setSelectedPerson(props.people.find(person => person.steamid === steamId));
+
         let result;
 
         try {
@@ -36,6 +39,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
         catch(ex) {
             setIsLoading(false);
             setErrorFetchingFriends(true);
+            setFriends([]);
             return;
         }
 
@@ -95,7 +99,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                 errorFetchingFriends && 
                 <Alert status='warning' borderRadius='sm'>
                     <AlertIcon />
-                    Unable to fetch friends for the selected person.
+                    Unable to fetch friends for the selected person ({ selectedPerson?.personaname }). This is likely due to their privacy settings.
                 </Alert>
             }
 
