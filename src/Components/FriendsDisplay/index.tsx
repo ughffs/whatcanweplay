@@ -6,6 +6,7 @@ import { Person, SteamPerson } from "../../Types/app.type";
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Input, Select, Text } from "@chakra-ui/react";
 import PersonSelect from "../PersonSelect";
 import steamService from '../../services/steamService';
+import { useEffect } from 'react';
 
 export interface FriendsDisplayProps { 
     people: Person[];
@@ -17,7 +18,13 @@ export interface FriendsDisplayProps {
 const FriendsDisplay = (props: FriendsDisplayProps) => {
 
     const [friends, setFriends] = useState<Person[]>([]);
+    const [filteredFriends, setFilteredFriends] = useState<Person[]>([]);
     const [isSomeoneSelected, setIsSomeoneSelected] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
+    useEffect(() => {
+        setFilteredFriends(friends.filter(friend => friend.personaname.toLowerCase().includes(searchTerm)));
+    }, [searchTerm, friends])
 
     const handlePersonSelect = async (steamId: string) => {
         let result = await steamService.getFriendsOfPersonBySteamId(steamId);
@@ -39,6 +46,10 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
     const handleOnFriendClick = (steamId: string) => {
         props.onSelectFriend(steamId);
     }
+
+    const handleOnSearchTermChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     return (
         <Flex 
@@ -63,8 +74,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
                 <Flex>
                     <Input 
                         placeholder='Filter by display name'
-                        /*value={ inputValue }
-                        onChange={ handleInputChange }*/
+                        onChange={ handleOnSearchTermChanges }
                     />
                 </Flex>
             }
@@ -79,7 +89,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
 
             <Flex overflowY='auto'>
                 <PersonList 
-                    people={ friends }
+                    people={ filteredFriends }
                     onPersonClick={ handleOnFriendClick }
                 />
             </Flex>
