@@ -14,12 +14,9 @@ export default {
 
 const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
     const [people, setPeople] = useState<Person[]>([]);
-    const [isSearching, setIsSearching] = useState<boolean>(false);
     const [searchError, setSearchError] = useState<string>('');
-    const [sharedGames,setSharedGames] = useState<Game[]>();
 
     const searchForPerson = async (steamId: string) => {
-        setIsSearching(true);
         setSearchError('');
 
         let alreadyExists: boolean = false;
@@ -31,7 +28,6 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
         if(alreadyExists)
         {
             setSearchError('Steam account already in the list.')
-            setIsSearching(false);
             return;
         }
 
@@ -50,7 +46,6 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
         };
         
         setPeople([...people, tmpPerson]);
-        setIsSearching(false);
     };
 
 
@@ -71,7 +66,6 @@ const Template: ComponentStory<typeof FriendsDisplay> = (args) => {
             <FriendsDisplay 
                 onSelectFriend={ searchForPerson }
                 error={ searchError }
-                isSearching={ isSearching }
                 people={ people }
             />
         </ChakraProvider>

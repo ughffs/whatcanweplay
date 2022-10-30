@@ -3,7 +3,7 @@ import { useState } from "react";
 import PersonList from "../PersonList";
 import SearchForm from "../SearchForm";
 import { Person, SteamPerson } from "../../Types/app.type";
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Input, Select, Text } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Input, Select, Spinner, Text } from "@chakra-ui/react";
 import PersonSelect from "../PersonSelect";
 import steamService from '../../services/steamService';
 import { useEffect } from 'react';
@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 export interface FriendsDisplayProps { 
     people: Person[];
     onSelectFriend: (steamId: string) => void;
-    isSearching: boolean;
     error: string;
 };
 
@@ -21,12 +20,14 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
     const [filteredFriends, setFilteredFriends] = useState<Person[]>([]);
     const [isSomeoneSelected, setIsSomeoneSelected] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
         setFilteredFriends(friends.filter(friend => friend.personaname.toLowerCase().includes(searchTerm)));
     }, [searchTerm, friends])
 
     const handlePersonSelect = async (steamId: string) => {
+        setIsLoading(true);
         let result = await steamService.getFriendsOfPersonBySteamId(steamId);
         
         if (result != null && result.length > 0) {
@@ -40,6 +41,7 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
             })
             setFriends(mappedPeople);
             setIsSomeoneSelected(true);
+            setIsLoading(false);
         }
     };
 
@@ -88,10 +90,13 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
             }
 
             <Flex overflowY='auto'>
-                <PersonList 
-                    people={ filteredFriends }
-                    onPersonClick={ handleOnFriendClick }
-                />
+                {
+                    isLoading 
+                        ? <Flex justifyContent='center'><Spinner /></Flex> 
+                        : <PersonList 
+                            people={ filteredFriends }
+                            onPersonClick={ handleOnFriendClick }/>
+                }
             </Flex>
         </Flex>
     );
