@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { Person } from "../../Types/app.type";
 import PersonCard from "../PersonCard";
 
@@ -8,7 +9,12 @@ export interface PersonListProps {
 
 const PersonList = (props: PersonListProps) => {
     return (
-        <>
+        <Flex 
+            flex='1'
+            flexDirection='column'
+            gap='10px'
+            marginRight='5px'
+        >
             {
                 props.people.map(p =>
                     <PersonCard 
@@ -20,7 +26,7 @@ const PersonList = (props: PersonListProps) => {
                     />
                 )
             }
-        </>
+        </Flex>
     );
 };
 

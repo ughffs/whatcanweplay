@@ -28,6 +28,7 @@ const PersonDisplay = (props: PersonDisplayProps) => {
             gap='20px'
             flexDirection='column'
             padding='10px'
+            maxHeight='50vh'
         >
             <Heading as='h2' size='md'>Players</Heading>
             <SearchForm 
@@ -41,11 +42,12 @@ const PersonDisplay = (props: PersonDisplayProps) => {
                     { props.error }
                 </Alert>
             }
-
-            <PersonList 
-                people={ props.people }
-                onPersonClick={ handleRemovePerson }
-            />
+            <Flex overflowY='auto'>
+                <PersonList 
+                    people={ props.people }
+                    onPersonClick={ handleRemovePerson }
+                />
+            </Flex>
         </Flex>  
     );
 };

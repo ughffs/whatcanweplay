@@ -28,6 +28,7 @@ const GamesDisplay = (props: GamesDisplayProps) => {
             padding='10px'
             gap='20px'
             height='100vh'
+            minWidth='400px'
         >
             <Heading as='h2' size='md'>Shared Games</Heading>
             { subHeading }

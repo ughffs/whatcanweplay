@@ -39,46 +39,38 @@ const FriendsDisplay = (props: FriendsDisplayProps) => {
     }
 
     return (
-        <Accordion allowToggle padding='10px'>
-            <AccordionItem border='none'>
-                <h3>
-                    <AccordionButton paddingLeft='0' _focus={{ boxShadow: 'unset' }}>
-                        <Box flex='1' textAlign='left'>
-                            <Heading as='h2' size='md'>Add from friends</Heading>
-                        </Box>
-                        <AccordionIcon />
-                    </AccordionButton>
-                </h3>
-                <AccordionPanel paddingLeft='0' paddingRight='0'>
-                    <Flex 
-                        gap='20px'
-                        flexDirection='column'
-                    >
-                        <Flex>
-                            <Text fontSize='sm'>Select a person to view their friends list.</Text>
-                        </Flex>
+        <Flex 
+            flexDirection='column' 
+            gap='10px' 
+            maxHeight='50vh'
+            padding='10px'
+        >
+            <Heading as='h2' size='md'>Add friends</Heading>
 
-                        <PersonSelect 
-                            people={ props.people }
-                            onSelect={ handlePersonSelect }
-                        />
-                            
-                        {
-                            props.error !== '' && 
-                            <Alert status='warning' color='gray.800' borderRadius='sm'>
-                                <AlertIcon />
-                                { props.error }
-                            </Alert>
-                        }
+            <Flex>
+                <Text fontSize='sm'>Select a person to view their friends list.</Text>
+            </Flex>
 
-                        <PersonList 
-                            people={ friends }
-                            onPersonClick={ handleOnFriendClick }
-                        />
-                    </Flex>  
-                </AccordionPanel>
-            </AccordionItem>
-        </Accordion>
+            <PersonSelect 
+                people={ props.people }
+                onSelect={ handlePersonSelect }
+            />
+                
+            {
+                props.error !== '' && 
+                <Alert status='warning' color='gray.800' borderRadius='sm'>
+                    <AlertIcon />
+                    { props.error }
+                </Alert>
+            }
+
+            <Flex overflowY='auto'>
+                <PersonList 
+                    people={ friends }
+                    onPersonClick={ handleOnFriendClick }
+                />
+            </Flex>
+        </Flex>
     );
 };
 
