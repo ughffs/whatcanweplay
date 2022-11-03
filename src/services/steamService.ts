@@ -1,9 +1,13 @@
 import axios from "axios";
-import { SteamPerson } from "../Types/app.type";
+import { GetSharedGamesRequest, GetSharedGamesResponse, SteamPerson } from "../Types/app.type";
 
 const steamService = {
+    baseUrl: process.env.REACT_APP_BASE_URL,
+
     async getSteamPersonById (steamId: string) : Promise<SteamPerson> {
-        let result = await axios.get<SteamPerson>('http://localhost:1234/steam/user/', {
+
+        console.log(`making a call to ${this.baseUrl}`);
+        let result = await axios.get<SteamPerson>(`${ this.baseUrl }steam/user/`, {
                 params: {
                     steamid: steamId
                 }
@@ -13,15 +17,22 @@ const steamService = {
     },
 
     async getFriendsOfPersonBySteamId (steamId: string) : Promise<SteamPerson[]> {
-        console.log('getting friends of person!')
-        let result = await axios.get<SteamPerson[]>('http://localhost:1234/steam/friends/', {
+        let result = await axios.get<SteamPerson[]>(`${ this.baseUrl }steam/friends/`, {
                 params: {
                     steamid: steamId
                 }
             })
-        console.log(result.data);
         return result.data;
-    }
+    },
+
+    async getSharedGames(payload: GetSharedGamesRequest) : Promise<GetSharedGamesResponse> {
+        let result = await axios.post<GetSharedGamesResponse>(
+            `${ this.baseUrl }steam/games`,
+            payload
+        );
+
+        return result.data;
+    } 
 
 }
 

@@ -100,12 +100,9 @@ function App() {
         steamIds: people.map(p => p.steamid)
       };
 
-      const resp = await axios.post<GetSharedGamesResponse>(
-        'http://localhost:1234/steam/games',
-        payload
-      );
+      const result = await steamService.getSharedGames(payload);
 
-      setSharedGames(resp.data.sharedGames);
+      setSharedGames(result.sharedGames);
       setIsFindingGames(false);
     }
   };
