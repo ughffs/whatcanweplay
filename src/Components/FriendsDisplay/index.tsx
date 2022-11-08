@@ -1,9 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import PersonList from "../PersonList";
-import SearchForm from "../SearchForm";
-import { Person, SteamPerson } from "../../Types/app.type";
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Alert, AlertDescription, AlertIcon, AlertTitle, Box, CloseButton, Flex, Heading, Input, Select, Spinner, Text } from "@chakra-ui/react";
+import { Person } from "../../Types/app.type";
+import { Alert, AlertIcon, Flex, Heading, Input, Spinner, Text } from "@chakra-ui/react";
 import PersonSelect from "../PersonSelect";
 import steamService from '../../services/steamService';
 import { useEffect } from 'react';

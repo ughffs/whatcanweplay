@@ -23,7 +23,7 @@ function App() {
     {
       updateSharedGames();
     }
-  }, [people, sharedGames]);
+  }, [people]);
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
