@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Box, Flex, Image } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import PersonDisplay from './Components/PersonDisplay';
 import { Game, GetSharedGamesRequest, Person } from './Types/app.type';
 import GamesDisplay from './Components/GamesDisplay';
