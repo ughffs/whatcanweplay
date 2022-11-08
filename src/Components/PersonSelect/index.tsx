@@ -1,5 +1,5 @@
 import { Select } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { Person } from "../../Types/app.type";
 
 export interface PersonSelectProps {
