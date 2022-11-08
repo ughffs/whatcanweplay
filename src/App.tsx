@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Box, Flex, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Image } from '@chakra-ui/react';
 import PersonDisplay from './Components/PersonDisplay';
-import { Game, GetSharedGamesRequest, GetSharedGamesResponse, Person, SteamPerson } from './Types/app.type';
-import axios from 'axios';
-import GameList from './Components/GameList';
+import { Game, GetSharedGamesRequest, Person } from './Types/app.type';
 import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
@@ -17,7 +15,7 @@ function App() {
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    if (people.length == 1)
+    if (people.length === 1)
     {
       setSharedGames([]);
     }
@@ -25,7 +23,7 @@ function App() {
     {
       updateSharedGames();
     }
-  }, [people]);
+  }, [people, sharedGames]);
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
@@ -82,7 +80,7 @@ function App() {
       let index = people.findIndex(p => 
           p.steamid === steamId);
 
-      if(index != -1)
+      if(index !== -1)
       {
           let tmpArray = [...people];
           tmpArray.splice(index, 1);
@@ -95,7 +93,6 @@ function App() {
     {
       setIsFindingGames(true);
 
-      let something = people.map(p => p.steamid);
       let payload: GetSharedGamesRequest = {
         steamIds: people.map(p => p.steamid)
       };
@@ -124,6 +121,7 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
+            <Image src='/wcwp-logo-svg.svg' />
           </Flex>
         </Flex>
         <Flex justifyContent='left'>

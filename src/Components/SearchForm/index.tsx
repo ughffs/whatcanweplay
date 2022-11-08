@@ -1,5 +1,5 @@
-import { Box, Button, Flex, FormControl, Input } from "@chakra-ui/react";
-import React, { ChangeEventHandler, useState } from "react";
+import { Button, Flex, Input } from "@chakra-ui/react";
+import React, { useState } from "react";
 
 export interface SearchFormProps {
     onSubmit: (steamId: string) => void;

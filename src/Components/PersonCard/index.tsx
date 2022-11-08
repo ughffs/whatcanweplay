@@ -1,5 +1,5 @@
 import { LockIcon } from "@chakra-ui/icons";
-import { Flex, Heading, IconButton, Popover, PopoverArrow, PopoverCloseButton, PopoverContent, PopoverTrigger, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { Flex, Heading, Tooltip } from "@chakra-ui/react";
 import PersonAvatar from "../PersonAvatar";
 
 export interface PersonCardProps {
@@ -11,8 +11,6 @@ export interface PersonCardProps {
 }
 
 const PersonCard = (props: PersonCardProps) => {
-    const { onOpen, onClose, isOpen } = useDisclosure()
-
     const handleOnClick = () => {
         props.onClick(props.steamId);
     };

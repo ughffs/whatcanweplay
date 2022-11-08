@@ -1,6 +1,5 @@
-import { Box, Button, Flex, FormControl, Input, Select } from "@chakra-ui/react";
-import { prependOnceListener } from "process";
-import React, { ChangeEventHandler, useState } from "react";
+import { Select } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { Person } from "../../Types/app.type";
 
 export interface PersonSelectProps {
@@ -9,10 +8,8 @@ export interface PersonSelectProps {
 };
 
 const PersonSelect = (props: PersonSelectProps) => { 
-    const [selectedOption, setSelectedOption] = useState<string>();
-
     const isSelectionInArray = (steamId: string) : boolean => {
-        if (props.people.some(person => person.steamid == steamId)) {
+        if (props.people.some(person => person.steamid === steamId)) {
             return true;
         }
 
@@ -23,7 +20,6 @@ const PersonSelect = (props: PersonSelectProps) => {
         let selectedSteamId = event.target.value;
         if (isSelectionInArray(selectedSteamId)) {
             props.onSelect(selectedSteamId);
-            setSelectedOption(selectedSteamId);
         }
     };
 

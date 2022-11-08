@@ -1,9 +1,7 @@
-import axios from "axios";
-import { useState } from "react";
 import PersonList from "../PersonList";
 import SearchForm from "../SearchForm";
-import { Person, SteamPerson } from "../../Types/app.type";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, CloseButton, Flex, Heading } from "@chakra-ui/react";
+import { Person } from "../../Types/app.type";
+import { Alert, AlertIcon, Flex, Heading } from "@chakra-ui/react";
 
 export interface PersonDisplayProps { 
     searchForPerson: (steamId: string) => void;

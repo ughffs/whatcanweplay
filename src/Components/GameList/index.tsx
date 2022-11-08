@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import { Game, Person } from "../../Types/app.type";
+import { Game } from "../../Types/app.type";
 import GameCard from "../GameCard";
-import PersonCard from "../PersonCard";
 
 export interface GameListProps {
     games: Game[];

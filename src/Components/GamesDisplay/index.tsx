@@ -22,7 +22,7 @@ const GamesDisplay = (props: GamesDisplayProps) => {
     else if(!props.enoughPlayersToDisplayGames && !props.isLoading) {
         subHeading = <Flex><Text fontSize='sm'>Please add at least 2 players to find games to play.</Text></Flex>
     }
-    else if (props.games?.length == 0 && !props.isLoading) {
+    else if (props.games?.length === 0 && !props.isLoading) {
         subHeading = <Flex><Text fontSize='sm'>There are no games found that you all own.</Text></Flex>
     } 
 
