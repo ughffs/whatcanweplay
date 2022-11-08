@@ -15,14 +15,26 @@ function App() {
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    if (people.length === 1)
-    {
-      setSharedGames([]);
-    }
-    else
-    {
-      updateSharedGames();
-    }
+    const updateSharedGames = async () => {
+      if (people?.length > 1)
+      {
+        setIsFindingGames(true);
+  
+        let payload: GetSharedGamesRequest = {
+          steamIds: people.map(p => p.steamid)
+        };
+  
+        const result = await steamService.getSharedGames(payload);
+  
+        setSharedGames(result.sharedGames);
+        setIsFindingGames(false);
+      }
+      else {
+        setSharedGames([]);
+      }
+  
+    };
+    updateSharedGames();
   }, [people]);
 
   // Potentially pull some of these out into hooks
@@ -88,22 +100,6 @@ function App() {
       }
   };
 
-  const updateSharedGames = async () => {
-    if (people?.length > 1)
-    {
-      setIsFindingGames(true);
-
-      let payload: GetSharedGamesRequest = {
-        steamIds: people.map(p => p.steamid)
-      };
-
-      const result = await steamService.getSharedGames(payload);
-
-      setSharedGames(result.sharedGames);
-      setIsFindingGames(false);
-    }
-  };
-
   return (
 
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
@@ -121,7 +117,6 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
-            <Image src='/wcwp-logo-svg.svg' />
           </Flex>
         </Flex>
         <Flex justifyContent='left'>
