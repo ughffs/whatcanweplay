@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import PersonDisplay from './Components/PersonDisplay';
 import { Game, GetSharedGamesRequest, Person } from './Types/app.type';
 import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 
 function App() {
@@ -15,6 +15,8 @@ function App() {
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
+  const [authorisedUser, setAuthorisedUser] = useState<User | undefined>(undefined);
+  const [isAuthorised, setIsAuthorised] = useState<boolean | string | null>(false || sessionStorage.getItem("accessToken"));
 
   useEffect(() => {
     const updateSharedGames = async () => {
@@ -43,7 +45,7 @@ function App() {
   const auth = getAuth();
 
   // Auth (this definitely needs to be pulled out)
-  function signInWithGoogle() {
+  const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token.
@@ -53,7 +55,13 @@ function App() {
 
         // The signed in user info
         const user = result.user;
-        console.log(user);
+        if (user) {
+          user.getIdToken().then((token) => {
+            sessionStorage.setItem('accessToken', token);
+          });
+          setIsAuthorised(true);
+          setAuthorisedUser(user);
+        }
       })
       .catch((error) => {
         // Handle errors here
@@ -63,6 +71,18 @@ function App() {
         // The email of the users account used
         const email = error.customData.Email;
       })
+  };
+
+  const signUserOut = () => {
+    signOut(auth).then(() => {
+      // Clear session storage
+      sessionStorage.clear();
+      setAuthorisedUser(undefined);
+      setIsAuthorised(false);
+      alert('Logged out successfully');
+    }).catch((error) => {
+      alert(error);
+    });
   };
 
   // Potentially pull some of these out into hooks
@@ -145,7 +165,12 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
-            <Button onClick={signInWithGoogle}>Click me to authenticate</Button>
+            <Button onClick={signInWithGoogle}>Log in with Google</Button>
+            <Button onClick={signUserOut}>Sign Out</Button>
+            {
+              isAuthorised ? <Text>Logged In</Text> : <Text>Not Logged In</Text>
+
+            }
           </Flex>
         </Flex>
         <Flex justifyContent='left'>
