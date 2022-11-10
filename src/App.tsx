@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import PersonDisplay from './Components/PersonDisplay';
 import { Game, GetSharedGamesRequest, Person } from './Types/app.type';
 import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -36,6 +38,32 @@ function App() {
     };
     updateSharedGames();
   }, [people]);
+
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+
+  // Auth (this definitely needs to be pulled out)
+  function signInWithGoogle() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token.
+        // You can use it to access the Google Api.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+
+        // The signed in user info
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        // Handle errors here
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        
+        // The email of the users account used
+        const email = error.customData.Email;
+      })
+  };
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
@@ -117,6 +145,7 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
+            <Button onClick={signInWithGoogle}>Click me to authenticate</Button>
           </Flex>
         </Flex>
         <Flex justifyContent='left'>
