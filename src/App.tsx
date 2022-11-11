@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import PersonDisplay from './Components/PersonDisplay';
@@ -6,9 +6,7 @@ import { Game, GetSharedGamesRequest, Person } from './Types/app.type';
 import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
-import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
-import { getAuth } from 'firebase/auth';
-import { useAuth } from './hooks/useAuth';
+import { AuthContext } from './contexts/auth/authContext';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -16,6 +14,7 @@ function App() {
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const updateSharedGames = async () => {
@@ -40,7 +39,7 @@ function App() {
     updateSharedGames();
   }, [people]);
 
-  const auth = useAuth();
+
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
@@ -105,8 +104,6 @@ function App() {
       }
   };
 
-  console.log(auth.authorisedUser)
-
   return (
 
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
@@ -124,9 +121,9 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
-            <Button onClick={auth.signInWithGoogle}>Sign In with Google</Button>
+            <Button onClick={auth?.signInWithGoogle}>Sign In with Google</Button>
             {
-              auth.authorised 
+              auth?.authorised 
                 ? <Text>Logged in</Text>
                 : <Text>Logged out</Text>
             }

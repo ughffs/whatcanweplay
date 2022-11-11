@@ -2,21 +2,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User } from "fir
 import React, { ReactNode, useContext } from "react";
 import { useState } from "react";
 
-// Add context creation here
-type AuthProvider = {
-    children: ReactNode;
-}
-
-type AuthProviderContext = {
+export type Auth = {
     authorised: boolean;
-    authorisedUser: User;
+    authorisedUser: User | undefined;
     signInWithGoogle: () => void;
     signUserOut: () => void;
-};
+}
 
-const authContext = React.createContext<AuthProviderContext | undefined>(undefined);
-
-export const useAuth = () => {
+export const useAuth = (): Auth => {
     const [authorised, setAuthorised] = useState(false);
     const [authorisedUser, setAuthorisedUser] = useState<User | undefined>(undefined);
     
@@ -66,18 +59,8 @@ export const useAuth = () => {
 
     return {
         authorised,
+        authorisedUser,
         signInWithGoogle,
         signUserOut,
-        authorisedUser
     }
 };
-
-/*export const AuthProvider = ({ children } : AuthProvider) => {
-    const auth = useAuth();
-    <authcontext
-
-};
-
-export const AuthConsumer = () => {
-    return useContext(authContext);
-};*/
