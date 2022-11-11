@@ -121,11 +121,10 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
-            <Button onClick={auth?.signInWithGoogle}>Sign In with Google</Button>
             {
               auth?.authorised 
-                ? <Text>Logged in</Text>
-                : <Text>Logged out</Text>
+                ? <Button onClick={auth?.signUserOut}>Sign Out</Button>
+                : <Button onClick={auth?.signInWithGoogle}>Sign In with Google</Button>
             }
           </Flex>
         </Flex>
