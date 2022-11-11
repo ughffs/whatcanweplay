@@ -8,6 +8,7 @@ import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
 import { GoogleAuthProvider, signInWithPopup, signOut, User } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
+import { useAuth } from './hooks/useAuth';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -15,8 +16,6 @@ function App() {
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
-  const [authorisedUser, setAuthorisedUser] = useState<User | undefined>(undefined);
-  const [isAuthorised, setIsAuthorised] = useState<boolean | string | null>(false || sessionStorage.getItem("accessToken"));
 
   useEffect(() => {
     const updateSharedGames = async () => {
@@ -41,49 +40,7 @@ function App() {
     updateSharedGames();
   }, [people]);
 
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-
-  // Auth (this definitely needs to be pulled out)
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token.
-        // You can use it to access the Google Api.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-
-        // The signed in user info
-        const user = result.user;
-        if (user) {
-          user.getIdToken().then((token) => {
-            sessionStorage.setItem('accessToken', token);
-          });
-          setIsAuthorised(true);
-          setAuthorisedUser(user);
-        }
-      })
-      .catch((error) => {
-        // Handle errors here
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        
-        // The email of the users account used
-        const email = error.customData.Email;
-      })
-  };
-
-  const signUserOut = () => {
-    signOut(auth).then(() => {
-      // Clear session storage
-      sessionStorage.clear();
-      setAuthorisedUser(undefined);
-      setIsAuthorised(false);
-      alert('Logged out successfully');
-    }).catch((error) => {
-      alert(error);
-    });
-  };
+  const auth = useAuth();
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
@@ -148,6 +105,8 @@ function App() {
       }
   };
 
+  console.log(auth.authorisedUser)
+
   return (
 
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
@@ -165,11 +124,11 @@ function App() {
               onSelectFriend={ addFriendToPlayerList }
               people={ people }
             />
-            <Button onClick={signInWithGoogle}>Log in with Google</Button>
-            <Button onClick={signUserOut}>Sign Out</Button>
+            <Button onClick={auth.signInWithGoogle}>Sign In with Google</Button>
             {
-              isAuthorised ? <Text>Logged In</Text> : <Text>Not Logged In</Text>
-
+              auth.authorised 
+                ? <Text>Logged in</Text>
+                : <Text>Logged out</Text>
             }
           </Flex>
         </Flex>
