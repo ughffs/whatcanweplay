@@ -7,12 +7,35 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
 import './config/firebaseConfig';
 import { AuthProvider } from './contexts/auth/authProvider';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+} from 'react-router-dom';
+import RequireAuth from './Components/RequireAuth';
+import LoginPage from './pages/login';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <div>Hello World!</div>,
+  },
+  {
+    path: '/home',
+    element: <RequireAuth><App /></RequireAuth>
+  },
+  {
+    path: '/login',
+    element: <LoginPage />
+  }
+])
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <AuthProvider>
-        <App />
+        <RouterProvider router={router} />
+        { /*<App />*/ }
       </AuthProvider>
     </ChakraProvider>
   </React.StrictMode>,
