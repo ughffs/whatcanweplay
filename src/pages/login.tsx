@@ -1,9 +1,11 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/auth/authContext";
 
 const LoginPage = () => {
     const auth = useContext(AuthContext);
+    const navigate = useNavigate();
 
     return (
         <Flex height='100vh' bg='gray.800' color='shared.textColour' justifyContent='center' alignItems='center'>

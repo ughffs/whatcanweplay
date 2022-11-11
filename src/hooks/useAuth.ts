@@ -1,33 +1,26 @@
 import { browserSessionPersistence, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
-import React, { ReactNode, useContext, useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type Auth = {
     authorised: boolean;
-    accessToken: string;
+    accessToken: string | null;
     signInWithGoogle: () => void;
     signUserOut: () => void;
 }
 
 export const useAuth = (): Auth => {
-    const [authorised, setAuthorised] = useState(false);
-    const [accessToken, setAccessToken] = useState<string>('');
+    const [authorised, setAuthorised] = useState<boolean>(localStorage.getItem('accessToken') ? true : false);
+    const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
 
     setPersistence(auth, browserSessionPersistence);
 
-    useEffect(() => {
-        let accessToken = localStorage.getItem('accessToken');
-        if (!accessToken) {
-            // navigate to the signup page
-            return;
-        }
-
-        // Verify token against Google
-        // If token is valid still, we are auth'd
-        setAuthorised(true);
-    });
+    // Verify token against Google
+    // If token is valid still, we are auth'd
+    console.log('render');
+    let tmpAccessToken = localStorage.getItem('accessToken');
+    console.log(tmpAccessToken);
 
     // Auth (this definitely needs to be pulled out)
     const signInWithGoogle = () => {
@@ -36,7 +29,6 @@ export const useAuth = (): Auth => {
                 // This gives you a Google Access Token.
                 // You can use it to access the Google Api.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential?.accessToken;
 
                 // The signed in user info
                 const user = result.user;

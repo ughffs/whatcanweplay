@@ -15,7 +15,8 @@ function App() {
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
   const auth = useContext(AuthContext);
-
+  console.log(auth);
+  
   useEffect(() => {
     const updateSharedGames = async () => {
       if (people?.length > 1)
@@ -38,8 +39,6 @@ function App() {
     };
     updateSharedGames();
   }, [people]);
-
-
 
   // Potentially pull some of these out into hooks
   const doesPlayerAlreadyExistsInCollection = (steamId: string) : boolean => {
@@ -105,7 +104,6 @@ function App() {
   };
 
   return (
-
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
       <Flex flex='1' flexDirection='row' gap='100px' justifyContent='center'>
         <Flex justifyContent='right' flexDirection='column'gap='100px'>

@@ -8,7 +8,7 @@ export interface RequireAuthProps {
 
 const RequireAuth = (props: RequireAuthProps) => {
     const auth = useContext(AuthContext);
-    console.log(auth?.authorised);
+    console.log(auth);
     return (
         <>
             { auth?.authorised ? props.children : <Navigate to='/login' replace/> }
