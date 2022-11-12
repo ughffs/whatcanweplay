@@ -14,19 +14,16 @@ import {
 } from 'react-router-dom';
 import RequireAuth from './Components/RequireAuth';
 import LoginPage from './pages/login';
+import RedirectIfAuthorised from './Components/RedirectIfAuthorised';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <div>Hello World!</div>,
-  },
-  {
-    path: '/home',
     element: <RequireAuth><App /></RequireAuth>
   },
   {
     path: '/login',
-    element: <LoginPage />
+    element: <RedirectIfAuthorised redirectUrl='/home'><LoginPage /></RedirectIfAuthorised>
   }
 ])
 

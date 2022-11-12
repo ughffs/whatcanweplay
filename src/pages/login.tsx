@@ -5,8 +5,6 @@ import { AuthContext } from "../contexts/auth/authContext";
 
 const LoginPage = () => {
     const auth = useContext(AuthContext);
-    const navigate = useNavigate();
-    const { state } = useLocation();
 
     return (
         <Flex height='100vh' bg='gray.800' color='shared.textColour' justifyContent='center' alignItems='center'>

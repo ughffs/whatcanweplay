@@ -64,7 +64,6 @@ export const useAuth = (): Auth => {
         localStorage.clear();
         setAuthorised(false);
         setAccessToken('');
-        alert('Logged out successfully');
         }).catch((error) => {
         alert(error);
         });
