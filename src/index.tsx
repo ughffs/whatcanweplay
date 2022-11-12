@@ -19,11 +19,17 @@ import RedirectIfAuthorised from './Components/RedirectIfAuthorised';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <RequireAuth><App /></RequireAuth>
+    element: 
+      <RequireAuth>
+        <App />
+      </RequireAuth>
   },
   {
     path: '/login',
-    element: <RedirectIfAuthorised redirectUrl='/'><LoginPage /></RedirectIfAuthorised>
+    element: 
+      <RedirectIfAuthorised redirectUrl='/'>
+        <LoginPage />
+      </RedirectIfAuthorised>
   }
 ])
 
