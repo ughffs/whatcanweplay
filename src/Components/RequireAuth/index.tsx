@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth/authContext";
 
 export interface RequireAuthProps {
@@ -8,10 +8,11 @@ export interface RequireAuthProps {
 
 const RequireAuth = (props: RequireAuthProps) => {
     const auth = useContext(AuthContext);
-    console.log(auth);
+    const desiredLocation = useLocation();
+
     return (
         <>
-            { auth?.authorised ? props.children : <Navigate to='/login' replace/> }
+            { auth?.authorised ? props.children : <Navigate to='/login' replace state={{ path: desiredLocation.pathname}}/> }
         </>
     );
 };

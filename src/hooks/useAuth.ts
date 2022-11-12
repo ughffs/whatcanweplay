@@ -18,9 +18,17 @@ export const useAuth = (): Auth => {
 
     // Verify token against Google
     // If token is valid still, we are auth'd
-    console.log('render');
-    let tmpAccessToken = localStorage.getItem('accessToken');
-    console.log(tmpAccessToken);
+    useEffect(() => {
+        let tmpAccessToken = localStorage.getItem('accessToken');
+        if (tmpAccessToken) {
+            // Verify token
+            auth.currentUser?.getIdToken(true).then(token => {
+                console.log(`Refreshed token: ${token}`);
+                setAccessToken(token);
+                setAuthorised(true);
+            });
+        }
+    });
 
     // Auth (this definitely needs to be pulled out)
     const signInWithGoogle = () => {

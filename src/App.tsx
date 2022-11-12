@@ -15,7 +15,6 @@ function App() {
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
   const auth = useContext(AuthContext);
-  console.log(auth);
   
   useEffect(() => {
     const updateSharedGames = async () => {
