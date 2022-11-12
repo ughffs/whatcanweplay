@@ -23,7 +23,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <RedirectIfAuthorised redirectUrl='/home'><LoginPage /></RedirectIfAuthorised>
+    element: <RedirectIfAuthorised redirectUrl='/'><LoginPage /></RedirectIfAuthorised>
   }
 ])
 
