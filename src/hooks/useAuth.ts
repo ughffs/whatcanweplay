@@ -1,4 +1,4 @@
-import { browserSessionPersistence, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export type Auth = {
@@ -6,6 +6,7 @@ export type Auth = {
     accessToken: string | null;
     signInWithGoogle: () => void;
     signUserOut: () => void;
+    createUserAccount: (email: string, password: string) => void;
 }
 
 export const useAuth = (): Auth => {
@@ -23,9 +24,7 @@ export const useAuth = (): Auth => {
         if (tmpAccessToken) {
             // Verify token
             auth.currentUser?.getIdToken(true).then(token => {
-                console.log(`Refreshed token: ${token}`);
-                setAccessToken(token);
-                setAuthorised(true);
+                setUserAuthorisedState(token);
             });
         }
     });
@@ -42,11 +41,9 @@ export const useAuth = (): Auth => {
                 const user = result.user;
                 if (user) {
                     user.getIdToken().then((token) => {
-                        localStorage.setItem('accessToken', token);
-                        setAccessToken(token);
-                });
-                setAuthorised(true);
-            }
+                        setUserAuthorisedState(token);
+                    });
+                }
             })
             .catch((error) => {
             // Handle errors here
@@ -60,19 +57,41 @@ export const useAuth = (): Auth => {
 
     const signUserOut = () => {
         signOut(auth).then(() => {
-        // Clear session storage
-        localStorage.clear();
-        setAuthorised(false);
-        setAccessToken('');
+            resetUserAuthorisedState();
         }).catch((error) => {
         alert(error);
         });
     };
 
+    const createUserAccount = (email: string, password: string) => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                if (user) {
+                    user.getIdToken().then((token) => {
+                        setUserAuthorisedState(token);
+                    })
+                }
+            });
+    }
+
+    const setUserAuthorisedState = (accessToken: string) => {
+        localStorage.setItem('accessToken', accessToken);
+        setAccessToken(accessToken);
+        setAuthorised(true);
+    }
+
+    const resetUserAuthorisedState = () => {
+        localStorage.clear();
+        setAuthorised(false);
+        setAccessToken('');
+    }
+
     return {
         authorised,
+        accessToken,
         signInWithGoogle,
         signUserOut,
-        accessToken
+        createUserAccount
     }
 };

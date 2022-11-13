@@ -15,6 +15,7 @@ import {
 import RequireAuth from './Components/RequireAuth';
 import LoginPage from './pages/login';
 import RedirectIfAuthorised from './Components/RedirectIfAuthorised';
+import SignUpPage from './pages/signup';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,13 @@ const router = createBrowserRouter([
     element: 
       <RedirectIfAuthorised redirectUrl='/'>
         <LoginPage />
+      </RedirectIfAuthorised>
+  },
+  {
+    path: '/signup',
+    element:
+      <RedirectIfAuthorised redirectUrl='/'>
+        <SignUpPage />
       </RedirectIfAuthorised>
   }
 ])
