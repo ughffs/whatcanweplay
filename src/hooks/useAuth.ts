@@ -1,4 +1,4 @@
-import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export type Auth = {

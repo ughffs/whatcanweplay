@@ -20,6 +20,7 @@ const LoginPage = () => {
                 Welcome!
             </Heading>
             <Button onClick={auth?.signInWithGoogle}>Sign in with Google</Button>
+            <Button>Sign in with Email Address and Password</Button>
             <Text>Not got an account? <Link to='/signup'>Sign up here.</Link></Text>
         </Flex>
     );
