@@ -1,5 +1,6 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/auth/authContext";
 
 const LoginPage = () => {
@@ -19,6 +20,7 @@ const LoginPage = () => {
                 Welcome!
             </Heading>
             <Button onClick={auth?.signInWithGoogle}>Sign in with Google</Button>
+            <Text>Not got an account? <Link to='/signup'>Sign up here.</Link></Text>
         </Flex>
     );
 };

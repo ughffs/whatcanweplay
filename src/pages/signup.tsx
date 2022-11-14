@@ -1,9 +1,20 @@
 import { Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/auth/authContext";
 
 const SignUpPage = () => {
     const auth = useContext(AuthContext);
+    const [emailAddress, setEmailAddress] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
+    const handleEmailAddressChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmailAddress(event.target.value);
+    }
+
+    const handlePasswordChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    }
 
     const handleSignUp = () => {
         // as long as the inputs aren't empty
@@ -30,10 +41,11 @@ const SignUpPage = () => {
                 <Heading size='lg' marginBottom='20px'>
                     Join us!
                 </Heading>
-                <Input placeholder='Email address' />
-                <Input placeholder='Password' type='password' />
+                <Input onChange={handleEmailAddressChangeEvent} placeholder='Email address' />
+                <Input onChange={handlePasswordChangeEvent} placeholder='Password' type='password' />
                 <Button onClick={handleSignUp}>Sign up</Button>
                 <Text>We do not share any data.</Text>
+                <Text>Already have an account? <Link to='/login'>Login here.</Link></Text>
             </Flex>
         </Flex>
     );
