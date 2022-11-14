@@ -1,10 +1,11 @@
-import { browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithPopup, signOut, User } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export type Auth = {
     authorised: boolean;
     accessToken: string | null;
     signInWithGoogle: () => void;
+    signInWithEmail: (email: string, password: string) => void;
     signUserOut: () => void;
     createUserAccount: (email: string, password: string) => void;
 }
@@ -12,7 +13,8 @@ export type Auth = {
 export const useAuth = (): Auth => {
     const [authorised, setAuthorised] = useState<boolean>(localStorage.getItem('accessToken') ? true : false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
-    const provider = new GoogleAuthProvider();
+    const googleAuthProvider = new GoogleAuthProvider();
+    const emailAuthProvider = new EmailAuthProvider();
     const auth = getAuth();
 
     setPersistence(auth, browserSessionPersistence);
@@ -31,7 +33,7 @@ export const useAuth = (): Auth => {
 
     // Auth (this definitely needs to be pulled out)
     const signInWithGoogle = () => {
-        signInWithPopup(auth, provider)
+        signInWithPopup(auth, googleAuthProvider)
             .then((result) => {
                 // This gives you a Google Access Token.
                 // You can use it to access the Google Api.
@@ -46,21 +48,45 @@ export const useAuth = (): Auth => {
                 }
             })
             .catch((error) => {
-            // Handle errors here
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            
-            // The email of the users account used
-            const email = error.customData.Email;
-        })
+                // Handle errors here
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                
+                // The email of the users account used
+                const email = error.customData.Email;
+            })
     };
+
+    const signInWithEmail = (email: string, password: string) => {
+        console.log(`${email} - ${password}`);
+        signInWithEmailAndPassword(auth, email, password)
+            .then((result) => {
+                const user = result.user;
+                if (user) {
+                    user.getIdToken().then((token) => {
+                        setUserAuthorisedState(token);
+                    });
+                }
+            }).catch((error) => {
+                console.log(error);
+                // Handle errors here
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                
+                // The email of the users account used
+                const email = error.customData.Email;
+            })
+        }
 
     const signUserOut = () => {
         signOut(auth).then(() => {
             resetUserAuthorisedState();
+            return true;
         }).catch((error) => {
-        alert(error);
+            alert(error);
         });
+
+        return false;
     };
 
     const createUserAccount = (email: string, password: string) => {
@@ -72,6 +98,8 @@ export const useAuth = (): Auth => {
                         setUserAuthorisedState(token);
                     })
                 }
+            }).catch((error) => {
+                return error;
             });
     }
 
@@ -91,6 +119,7 @@ export const useAuth = (): Auth => {
         authorised,
         accessToken,
         signInWithGoogle,
+        signInWithEmail,
         signUserOut,
         createUserAccount
     }
