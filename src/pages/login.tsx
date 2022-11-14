@@ -23,7 +23,13 @@ const LoginPage = () => {
     }
 
     const handleLoginWithGoogle = () => {
-        auth?.signInWithGoogle();
+        if(auth)
+        {
+            let provider = auth?.providers.google;
+            auth.signInWithSocialMedia(provider)
+                .then((result) => console.log(`logged in: ${result}`))
+                .catch((error) => console.log(error));
+        }
     }
 
     return (

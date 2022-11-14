@@ -1,4 +1,4 @@
-import { browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut, User } from "firebase/auth";
+import { AuthProvider, browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export type Auth = {
@@ -6,9 +6,16 @@ export type Auth = {
     accessToken: string | null;
     signInWithGoogle: () => void;
     signInWithEmail: (email: string, password: string) => void;
+    signInWithSocialMedia: (provider: AuthProvider) => Promise<UserCredential>;
     signUserOut: () => void;
     createUserAccount: (email: string, password: string) => void;
+    providers: Providers;
 }
+
+export type Providers = {
+    google: AuthProvider;
+}
+
 
 export const useAuth = (): Auth => {
     const [authorised, setAuthorised] = useState<boolean>(localStorage.getItem('accessToken') ? true : false);
@@ -16,6 +23,10 @@ export const useAuth = (): Auth => {
     const googleAuthProvider = new GoogleAuthProvider();
     const emailAuthProvider = new EmailAuthProvider();
     const auth = getAuth();
+
+    const providers: Providers = {
+        google: googleAuthProvider
+    }
 
     setPersistence(auth, browserSessionPersistence);
 
@@ -30,6 +41,13 @@ export const useAuth = (): Auth => {
             });
         }
     });
+
+    const signInWithSocialMedia = (provider: AuthProvider) => 
+        new Promise<UserCredential>((resolve, reject) => {
+            signInWithPopup(auth, provider)
+                .then(result => resolve(result))
+                .catch(error => reject(error));
+        });
 
     // Auth (this definitely needs to be pulled out)
     const signInWithGoogle = () => {
@@ -119,8 +137,10 @@ export const useAuth = (): Auth => {
         authorised,
         accessToken,
         signInWithGoogle,
+        signInWithSocialMedia,
         signInWithEmail,
         signUserOut,
-        createUserAccount
+        createUserAccount,
+        providers
     }
 };
