@@ -5,8 +5,6 @@ const steamService = {
     baseUrl: process.env.REACT_APP_BASE_URL,
 
     async getSteamPersonById (steamId: string) : Promise<SteamPerson> {
-
-        console.log(`making a call to ${this.baseUrl}`);
         let result = await axios.get<SteamPerson>(`${ this.baseUrl }steam/user/`, {
                 params: {
                     steamid: steamId

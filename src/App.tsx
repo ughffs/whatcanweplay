@@ -102,6 +102,11 @@ function App() {
       }
   };
 
+  const handleSignOut = () => {
+    auth?.signUserOut()
+      .then(() => {});
+  }
+
   return (
     <Box height='100vh' bg='gray.800' color='shared.textColour'>
       <Flex flex='1' flexDirection='row' gap='100px' justifyContent='center'>
@@ -119,9 +124,7 @@ function App() {
               people={ people }
             />
             {
-              auth?.authorised 
-                ? <Button onClick={auth?.signUserOut}>Sign Out</Button>
-                : <Button onClick={auth?.signInWithGoogle}>Sign In with Google</Button>
+              auth?.authorised && <Button onClick={handleSignOut}>Sign Out</Button>
             }
           </Flex>
         </Flex>

@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 export type Auth = {
     authorised: boolean;
     accessToken: string | null;
-    signInWithGoogle: () => void;
-    signInWithEmail: (email: string, password: string) => void;
+    signInWithEmail: (email: string, password: string) => Promise<UserCredential>;
     signInWithSocialMedia: (provider: AuthProvider) => Promise<UserCredential>;
-    signUserOut: () => void;
-    createUserAccount: (email: string, password: string) => void;
+    signUserOut: () => Promise<void>;
+    createUserAccount: (email: string, password: string) => Promise<UserCredential>;
     providers: Providers;
 }
 
@@ -45,81 +44,64 @@ export const useAuth = (): Auth => {
     const signInWithSocialMedia = (provider: AuthProvider) => 
         new Promise<UserCredential>((resolve, reject) => {
             signInWithPopup(auth, provider)
-                .then(result => resolve(result))
+                .then(result => {
+                    const user = result.user;
+                    if (user) {
+                        user.getIdToken().then((token) => {
+                            setUserAuthorisedState(token);
+                        });
+                    }
+                    Promise.resolve(result)
+                })
                 .catch(error => reject(error));
         });
 
-    // Auth (this definitely needs to be pulled out)
-    const signInWithGoogle = () => {
-        signInWithPopup(auth, googleAuthProvider)
-            .then((result) => {
-                // This gives you a Google Access Token.
-                // You can use it to access the Google Api.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
+    const signInWithEmail = (email: string, password: string) => 
+        new Promise<UserCredential>((resolve, reject) => {
+            signInWithEmailAndPassword(auth, email, password)
+                .then((result) => {
+                    const user = result.user;
+                    if (user) {
+                        user.getIdToken().then((token) => {
+                            setUserAuthorisedState(token);
+                        });
+                    }
+                    Promise.resolve(result);
+                }).catch((error) => {
+                    Promise.reject(error);
+                })
+        });
+        
 
-                // The signed in user info
-                const user = result.user;
-                if (user) {
-                    user.getIdToken().then((token) => {
-                        setUserAuthorisedState(token);
-                    });
-                }
-            })
-            .catch((error) => {
-                // Handle errors here
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                
-                // The email of the users account used
-                const email = error.customData.Email;
-            })
-    };
-
-    const signInWithEmail = (email: string, password: string) => {
-        console.log(`${email} - ${password}`);
-        signInWithEmailAndPassword(auth, email, password)
-            .then((result) => {
-                const user = result.user;
-                if (user) {
-                    user.getIdToken().then((token) => {
-                        setUserAuthorisedState(token);
-                    });
-                }
-            }).catch((error) => {
-                console.log(error);
-                // Handle errors here
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                
-                // The email of the users account used
-                const email = error.customData.Email;
-            })
-        }
-
-    const signUserOut = () => {
-        signOut(auth).then(() => {
-            resetUserAuthorisedState();
-            return true;
-        }).catch((error) => {
-            alert(error);
+    const signUserOut = () => 
+        new Promise<void>((resolve, reject) => {
+            signOut(auth)
+                .then(() => {
+                    resetUserAuthorisedState();
+                    Promise.resolve();
+                })
+                .catch((error) => {
+                    alert(error);
+                    Promise.reject();
+                });
         });
 
-        return false;
-    };
-
-    const createUserAccount = (email: string, password: string) => {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                if (user) {
-                    user.getIdToken().then((token) => {
-                        setUserAuthorisedState(token);
-                    })
-                }
-            }).catch((error) => {
-                return error;
-            });
-    }
+    const createUserAccount = (email: string, password: string) => 
+        new Promise<UserCredential>((resolve, reject) => {
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    if (user) {
+                        user.getIdToken().then((token) => {
+                            setUserAuthorisedState(token);
+                        })
+                    }
+                    Promise.resolve(userCredential);
+                }).catch((error) => {
+                    Promise.reject(error);
+                });
+        })    
+    
 
     const setUserAuthorisedState = (accessToken: string) => {
         localStorage.setItem('accessToken', accessToken);
@@ -136,7 +118,6 @@ export const useAuth = (): Auth => {
     return {
         authorised,
         accessToken,
-        signInWithGoogle,
         signInWithSocialMedia,
         signInWithEmail,
         signUserOut,

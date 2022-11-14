@@ -21,12 +21,7 @@ const SignUpPage = () => {
     const handleSignUp = () => {
         // Reset any errors
         setError('');
-        // as long as the inputs aren't empty
-        // call the auth context with params.
-        // Page will auto-redirect.
-        // Display error if something is wrong.
 
-        // 1. Validate email first
         if (!validator.isEmail(emailAddress)) {
             setError('Invalid email address.');
             return;
@@ -37,7 +32,9 @@ const SignUpPage = () => {
             return;
         }
 
-        auth?.createUserAccount(emailAddress, password);
+        auth?.createUserAccount(emailAddress, password)
+            .then()
+            .catch((error) => console.log(error));
     };
 
     return (

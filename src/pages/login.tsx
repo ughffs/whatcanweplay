@@ -19,7 +19,9 @@ const LoginPage = () => {
     }
 
     const handleLoginWithEmailAndPassword = () => {
-        auth?.signInWithEmail(emailAddress, password);
+        auth?.signInWithEmail(emailAddress, password)
+            .then()
+            .catch((error) => console.log(error));
     }
 
     const handleLoginWithGoogle = () => {
@@ -27,7 +29,7 @@ const LoginPage = () => {
         {
             let provider = auth?.providers.google;
             auth.signInWithSocialMedia(provider)
-                .then((result) => console.log(`logged in: ${result}`))
+                .then()
                 .catch((error) => console.log(error));
         }
     }
