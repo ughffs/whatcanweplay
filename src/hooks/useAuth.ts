@@ -32,13 +32,33 @@ export const useAuth = (): Auth => {
     // Verify token against Google
     // If token is valid still, we are auth'd
     useEffect(() => {
-        let tmpAccessToken = localStorage.getItem('accessToken');
+        /* let tmpAccessToken = localStorage.getItem('accessToken');
         if (tmpAccessToken) {
+            console.log(`Access token in storage: ${tmpAccessToken}`)
             // Verify token
-            auth.currentUser?.getIdToken(true).then(token => {
-                setUserAuthorisedState(token);
-            });
-        }
+            if (!auth.currentUser) {
+                resetUserAuthorisedState();
+                return;
+            }
+            auth.currentUser?.getIdToken(true)
+                .then(token => {
+                    setUserIsAuthorisedState(token);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        } */
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                user.getIdToken()
+                    .then(token => setUserIsAuthorisedState(token))
+                    .catch(error => console.log(error));
+                return;
+            }
+
+            resetUserAuthorisedState();
+        });
     });
 
     const signInWithSocialMedia = (provider: AuthProvider) => 
@@ -48,7 +68,7 @@ export const useAuth = (): Auth => {
                     const user = result.user;
                     if (user) {
                         user.getIdToken().then((token) => {
-                            setUserAuthorisedState(token);
+                            setUserIsAuthorisedState(token);
                         });
                     }
                     Promise.resolve(result)
@@ -63,7 +83,7 @@ export const useAuth = (): Auth => {
                     const user = result.user;
                     if (user) {
                         user.getIdToken().then((token) => {
-                            setUserAuthorisedState(token);
+                            setUserIsAuthorisedState(token);
                         });
                     }
                     Promise.resolve(result);
@@ -93,7 +113,7 @@ export const useAuth = (): Auth => {
                     const user = userCredential.user;
                     if (user) {
                         user.getIdToken().then((token) => {
-                            setUserAuthorisedState(token);
+                            setUserIsAuthorisedState(token);
                         })
                     }
                     Promise.resolve(userCredential);
@@ -103,7 +123,7 @@ export const useAuth = (): Auth => {
         })    
     
 
-    const setUserAuthorisedState = (accessToken: string) => {
+    const setUserIsAuthorisedState = (accessToken: string) => {
         localStorage.setItem('accessToken', accessToken);
         setAccessToken(accessToken);
         setAuthorised(true);
