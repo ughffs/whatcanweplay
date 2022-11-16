@@ -20,17 +20,40 @@ const LoginPage = () => {
 
     const handleLoginWithEmailAndPassword = () => {
         auth?.signInWithEmail(emailAddress, password)
-            .then()
-            .catch((error) => console.log(error));
+            .then(() => console.log('worked as expected'))
+            .catch(error => {
+                console.log(`Error object: ${error}`);
+                console.log(error.code);
+                handleLoginError(error)
+            });
     }
 
     const handleLoginWithGoogle = () => {
         if(auth)
         {
-            let provider = auth?.providers.google;
+            let provider = auth.providers.google;
             auth.signInWithSocialMedia(provider)
-                .then()
-                .catch((error) => console.log(error));
+                .catch(error => handleLoginError(error));
+        }
+    }
+
+    const handleLoginError = (error: any) => {
+        switch (error.code) {
+            case 'auth/invalid-email':
+                setError('Invalid email address');
+                break;
+            case 'auth/user-disabled':
+                setError('The user account associated with this email address has been disabled');
+                break;
+            case 'auth/user-not-found':
+                setError('No account associated with this email address');
+                break;
+            case 'auth/wrong-password':
+                setError('Incorrect password');
+                break;
+            default:
+                setError('An unknown error has occurred. Please try again.');
+                break;
         }
     }
 

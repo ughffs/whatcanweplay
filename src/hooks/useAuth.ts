@@ -1,4 +1,17 @@
-import { AuthProvider, browserSessionPersistence, createUserWithEmailAndPassword, EmailAuthProvider, getAuth, GoogleAuthProvider, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from "firebase/auth";
+import { 
+    AuthProvider,
+    browserSessionPersistence, 
+    createUserWithEmailAndPassword, 
+    EmailAuthProvider, 
+    getAuth, 
+    GoogleAuthProvider, 
+    setPersistence, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    signOut, 
+    UserCredential,
+    AuthError
+} from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export type Auth = {
@@ -20,7 +33,6 @@ export const useAuth = (): Auth => {
     const [authorised, setAuthorised] = useState<boolean>(localStorage.getItem('accessToken') ? true : false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('accessToken'));
     const googleAuthProvider = new GoogleAuthProvider();
-    const emailAuthProvider = new EmailAuthProvider();
     const auth = getAuth();
 
     const providers: Providers = {
@@ -29,26 +41,8 @@ export const useAuth = (): Auth => {
 
     setPersistence(auth, browserSessionPersistence);
 
-    // Verify token against Google
-    // If token is valid still, we are auth'd
+    // Monitor if auth state changes
     useEffect(() => {
-        /* let tmpAccessToken = localStorage.getItem('accessToken');
-        if (tmpAccessToken) {
-            console.log(`Access token in storage: ${tmpAccessToken}`)
-            // Verify token
-            if (!auth.currentUser) {
-                resetUserAuthorisedState();
-                return;
-            }
-            auth.currentUser?.getIdToken(true)
-                .then(token => {
-                    setUserIsAuthorisedState(token);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        } */
-
         auth.onAuthStateChanged(user => {
             if (user) {
                 user.getIdToken()
@@ -73,7 +67,9 @@ export const useAuth = (): Auth => {
                     }
                     Promise.resolve(result)
                 })
-                .catch(error => reject(error));
+                .catch(error => {
+                    throw error;
+                });
         });
 
     const signInWithEmail = (email: string, password: string) => 
@@ -87,9 +83,11 @@ export const useAuth = (): Auth => {
                         });
                     }
                     Promise.resolve(result);
-                }).catch((error) => {
-                    Promise.reject(error);
                 })
+                .catch(error => { 
+                    console.log(error);
+                    reject(error);
+                });
         });
         
 
