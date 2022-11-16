@@ -65,10 +65,10 @@ export const useAuth = (): Auth => {
                             setUserIsAuthorisedState(token);
                         });
                     }
-                    Promise.resolve(result)
+                    resolve(result)
                 })
                 .catch(error => {
-                    throw error;
+                    reject(error);
                 });
         });
 
@@ -82,10 +82,9 @@ export const useAuth = (): Auth => {
                             setUserIsAuthorisedState(token);
                         });
                     }
-                    Promise.resolve(result);
+                    resolve(result);
                 })
                 .catch(error => { 
-                    console.log(error);
                     reject(error);
                 });
         });
