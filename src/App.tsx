@@ -9,6 +9,7 @@ import steamService from './services/steamService';
 import { AuthContext } from './contexts/auth/authContext';
 import { app } from './config/firebaseConfig';
 import { getFirestore, getDoc, doc } from 'firebase/firestore';
+import { userConverter } from './firebase/firestore';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -20,13 +21,14 @@ function App() {
   const auth = useContext(AuthContext);
 
   const db = getFirestore(app);
-  const docRef = doc(db, 'users', 'aaron.r.gregory@gmail.com');
+  const docRef = doc(db, 'users', 'aaron.r.gregory@gmail.com').withConverter(userConverter);
 
   useEffect(() => {
     // TODO: Pull this out into custom hook
     getDoc(docRef).then((result) => {
       if(result.exists()) {
-        let steamId = result.data().steam_id;
+        let user = result.data();
+        let steamId = user.steamId;
         if (steamId) {
           setLoggedInUserSteamId(steamId);
         }
