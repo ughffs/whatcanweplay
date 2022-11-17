@@ -7,6 +7,8 @@ import GamesDisplay from './Components/GamesDisplay';
 import FriendsDisplay from './Components/FriendsDisplay';
 import steamService from './services/steamService';
 import { AuthContext } from './contexts/auth/authContext';
+import { app } from './config/firebaseConfig';
+import { getFirestore, getDoc, doc } from 'firebase/firestore';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -14,7 +16,26 @@ function App() {
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
+  const [loggedInUserSteamId, setLoggedInUserSteamId] = useState<string>('');
   const auth = useContext(AuthContext);
+
+  const db = getFirestore(app);
+  const docRef = doc(db, 'users', 'aaron.r.gregory@gmail.com');
+
+  useEffect(() => {
+    // TODO: Pull this out into custom hook
+    getDoc(docRef).then((result) => {
+      if(result.exists()) {
+        let steamId = result.data().steam_id;
+        if (steamId) {
+          setLoggedInUserSteamId(steamId);
+        }
+      } else {
+        setLoggedInUserSteamId('');
+      }
+    })
+  });
+
   
   useEffect(() => {
     const updateSharedGames = async () => {

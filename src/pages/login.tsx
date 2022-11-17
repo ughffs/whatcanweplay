@@ -19,6 +19,16 @@ const LoginPage = () => {
     }
 
     const handleLoginWithEmailAndPassword = () => {
+        if (!emailAddress) {
+            setError('Please enter an email address');
+            return;
+        }
+
+        if (!password) {
+            setError('Please enter a password');
+            return;
+        }
+
         auth?.signInWithEmail(emailAddress, password)
             .then(() => console.log('worked as expected'))
             .catch(error => {
