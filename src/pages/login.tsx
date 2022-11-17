@@ -1,5 +1,4 @@
 import { Alert, AlertIcon, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
-import { error } from "console";
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/auth/authContext";

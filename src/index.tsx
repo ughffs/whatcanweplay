@@ -16,6 +16,7 @@ import RequireAuth from './Components/RequireAuth';
 import LoginPage from './pages/login';
 import RedirectIfAuthorised from './Components/RedirectIfAuthorised';
 import SignUpPage from './pages/signup';
+import SetupAccount from './pages/setup/setupAccount';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       <RedirectIfAuthorised redirectUrl='/'>
         <SignUpPage />
       </RedirectIfAuthorised>
+  },
+  {
+    path: '/accountsetup',
+    element: <SetupAccount />
   }
 ])
 
