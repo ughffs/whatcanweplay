@@ -1,3 +1,4 @@
+import { FirebaseApp } from "firebase/app";
 import { 
     AuthProvider,
     browserSessionPersistence, 
@@ -10,7 +11,7 @@ import {
     signInWithPopup, 
     signOut, 
     UserCredential,
-    AuthError
+    Auth as FirebaseAuth
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 
@@ -22,6 +23,7 @@ export type Auth = {
     signUserOut: () => Promise<void>;
     createUserAccount: (email: string, password: string) => Promise<UserCredential>;
     providers: Providers;
+    firebaseAuth: FirebaseAuth
 }
 
 export type Providers = {
@@ -95,11 +97,11 @@ export const useAuth = (): Auth => {
             signOut(auth)
                 .then(() => {
                     resetUserAuthorisedState();
-                    Promise.resolve();
+                    resolve();
                 })
                 .catch((error) => {
                     alert(error);
-                    Promise.reject();
+                    reject();
                 });
         });
 
@@ -113,9 +115,9 @@ export const useAuth = (): Auth => {
                             setUserIsAuthorisedState(token);
                         })
                     }
-                    Promise.resolve(userCredential);
+                    resolve(userCredential);
                 }).catch((error) => {
-                    Promise.reject(error);
+                    reject(error);
                 });
         })    
     
@@ -139,6 +141,7 @@ export const useAuth = (): Auth => {
         signInWithEmail,
         signUserOut,
         createUserAccount,
-        providers
+        providers,
+        firebaseAuth: auth
     }
 };

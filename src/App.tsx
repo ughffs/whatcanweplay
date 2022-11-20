@@ -11,6 +11,7 @@ import { app } from './config/firebaseConfig';
 import { getFirestore, getDoc, doc } from 'firebase/firestore';
 import { userConverter } from './firebase/firestore';
 import { useFirstTimeLogin } from './hooks/useFirstTimeLogin';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [people, setPeople] = useState<Person[]>([]);
@@ -18,34 +19,19 @@ function App() {
   const [isFindingGames, setIsFindingGames] = useState<boolean>(false);
   const [searchError, setSearchError] = useState<string>('');
   const [sharedGames, setSharedGames] = useState<Game[]>([]);
-  const [loggedInUserSteamId, setLoggedInUserSteamId] = useState<string>('');
-  const [isFirstTimeLogin, setIsFirstTimeLogin] = useState<boolean>(false);
   const auth = useContext(AuthContext);
-
-  const db = getFirestore(app);
-  const docRef = doc(db, 'users', 'aaron.r.gregory@gmail.com').withConverter(userConverter);
-  const isFirstLogin = useFirstTimeLogin();
-
-  console.log(`Is first login? ${isFirstLogin}`);
+  const navigate = useNavigate();
+  const firstLogin = useFirstTimeLogin();
 
   useEffect(() => {
-    // TODO: Pull this out into custom hook
-    getDoc(docRef).then((result) => {
-      if(result.exists()) {
-        let user = result.data();
-        console.log(user);
-        let steamId = user.steamId;
-        if (steamId) {
-          setLoggedInUserSteamId(steamId);
-        }
-      } else {
-        setLoggedInUserSteamId('');
-      }
-    })
-  });
+    if(firstLogin.isFirstLogin) {
+      navigate('/accountsetup');
+      return;
+    }
+  }, [firstLogin.isFirstLogin])
 
-  
   useEffect(() => {
+
     const updateSharedGames = async () => {
       if (people?.length > 1)
       {

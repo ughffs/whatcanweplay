@@ -1,14 +1,17 @@
 import { Alert, AlertIcon, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/auth/authContext";
 import validator from 'validator';
+import { useUserRecord } from "../hooks/useUserRecord";
 
 const SignUpPage = () => {
     const auth = useContext(AuthContext);
     const [emailAddress, setEmailAddress] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const userRecord = useUserRecord();
+    const navigate = useNavigate();
 
     const handleEmailAddressChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmailAddress(event.target.value);
@@ -33,7 +36,13 @@ const SignUpPage = () => {
         }
 
         auth?.createUserAccount(emailAddress, password)
-            .then()
+            .then(result => {
+                console.log('test')
+                const userId = result.user.uid;
+                userRecord.createUserRecord(userId, emailAddress)
+                    .then(() => navigate('/accountsetup'))
+                    .catch(error => console.log(error));
+            })
             .catch((error) => console.log(error));
     };
 

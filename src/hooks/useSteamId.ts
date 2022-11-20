@@ -1,16 +1,16 @@
-import { doc, DocumentReference, getDoc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
+import { doc, DocumentReference, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { app } from "../config/firebaseConfig";
 import { AuthContext } from "../contexts/auth/authContext";
-import { User, userConverter } from "../firebase/firestore";
+import { userConverter } from "../firebase/firestore";
 
-export type UseFirstTimeLogin = {
-    isFirstLogin: boolean;
-    setIsFirstLoginToFalse: () => Promise<void>;
+export type UseSteamId = {
+    steamId: string;
+    setSteamIdForLoggedInUser: (steamId: string) => Promise<void>;
 }
 
-export const useFirstTimeLogin = (): UseFirstTimeLogin => {
-    const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
+export const useSteamId = (): UseSteamId => {
+    const [steamId, setSteamId] = useState<string>('');
     const auth = useContext(AuthContext);
 
     const db = getFirestore(app);
@@ -20,46 +20,41 @@ export const useFirstTimeLogin = (): UseFirstTimeLogin => {
 
         if(userEmail) {
             const docRef = doc(db, 'users', userEmail).withConverter(userConverter);
-            getDoc(docRef).then((result) => {
-                if(!result.exists()) {
-                    setIsFirstLogin(false);
-                    return;
-                }
-
+            getDoc(docRef).then(result => {
                 let user = result.data();
 
-                if(!user.first_time_login) {
-                    setIsFirstLogin(false);
+                if(user?.steam_id) {
+                    setSteamId(user.steam_id)
                     return;
                 }
-
-                setIsFirstLogin(true);
             })
         }
     });
 
-    const setIsFirstLoginToFalse = () => 
+    const setSteamIdForLoggedInUser = (steamId: string) => 
         new Promise<void>(async (resolve, reject) => {
 
             const userEmail = auth?.firebaseAuth.currentUser?.email;
+            const cleanedSteamId = steamId.replace(/[^0-9]/g, '');
 
             if(userEmail) {
                 const docRef = doc(db, 'users', userEmail).withConverter(userConverter);
-                
+
                 try {
                     await updateDoc(docRef, {
-                        first_time_login: false
+                        steam_id: cleanedSteamId
                     });
                 } catch (error) {
                     reject(error);
                 }
             }
+
             resolve();
         }
     );
 
     return {
-        isFirstLogin,
-        setIsFirstLoginToFalse
+        steamId,
+        setSteamIdForLoggedInUser
     }
 }
